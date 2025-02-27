@@ -61,7 +61,8 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
 
     if (result != null) {
       final weightUsed = result as double;
-      final adjustedNutrients = (foodItem!['foodNutrients'] as List<dynamic>).map((nutrient) {
+      final adjustedNutrients =
+          (foodItem!['foodNutrients'] as List<dynamic>).map((nutrient) {
         final value = nutrient['value'] as double;
         final adjustedValue = (value / 100) * weightUsed;
         return {
@@ -71,9 +72,11 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
         };
       }).toList();
 
+      // Include weightUsed as 'grams' in the ingredientData
       final ingredientData = {
         'description': foodItem!['description'],
         'nutrients': List<Map<String, dynamic>>.from(adjustedNutrients),
+        'grams': weightUsed,
       };
 
       Navigator.push(

@@ -7,12 +7,9 @@ class IngredientDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Assume the ingredient map contains a 'grams' field and a 'nutrients' list.
     final double grams = ingredient['grams'] as double? ?? 0;
     final List<Map<String, dynamic>> nutrients =
-        List<Map<String, dynamic>>.from(
-      ingredient['nutrients'] ?? [],
-    );
+        List<Map<String, dynamic>>.from(ingredient['nutrients'] ?? []);
 
     return Scaffold(
       appBar: AppBar(
