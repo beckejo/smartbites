@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:barcode_scan2/barcode_scan2.dart';
 import 'weight_measurement_screen.dart';
 import 'ingredient_summary_screen.dart';
 
@@ -48,6 +49,17 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error retrieving data from USDA API.')),
       );
+    }
+  }
+
+  Future<void> scanBarcode() async {
+    // Launch the barcode scanner and show the live camera preview
+    var scanResult = await BarcodeScanner.scan();
+    if (scanResult.rawContent.isNotEmpty) {
+      setState(() {
+        upcController.text = scanResult.rawContent;
+      });
+      fetchFoodData(scanResult.rawContent);
     }
   }
 
@@ -105,6 +117,14 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
+            // Button to start barcode scanning
+            ElevatedButton.icon(
+              icon: const Icon(Icons.camera_alt),
+              label: const Text('Scan Barcode'),
+              onPressed: scanBarcode,
+            ),
+            const SizedBox(height: 20),
+            // Text field for manual UPC entry
             TextField(
               controller: upcController,
               decoration: const InputDecoration(
