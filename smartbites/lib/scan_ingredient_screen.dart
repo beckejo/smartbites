@@ -84,8 +84,8 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
         };
       }).toList();
 
-      // Show the Ingredient Summary screen
-      await Navigator.push(
+      // Push the Ingredient Summary screen and wait for its return.
+      final ingredient = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => IngredientSummaryScreen(
@@ -95,11 +95,16 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
         ),
       );
 
-      // Instead of popping the ScanIngredientScreen, clear the state so the user can scan another ingredient.
-      setState(() {
-        upcController.clear();
-        foodItem = null;
-      });
+      if (ingredient != null) {
+        // Return the scanned ingredient to the previous screen.
+        Navigator.pop(context, ingredient);
+      } else {
+        // If the user canceled, clear state so they can scan another.
+        setState(() {
+          upcController.clear();
+          foodItem = null;
+        });
+      }
     }
   }
 
