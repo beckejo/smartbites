@@ -84,14 +84,8 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
         };
       }).toList();
 
-      // Include weightUsed as 'grams' in the ingredientData
-      final ingredientData = {
-        'description': foodItem!['description'],
-        'nutrients': List<Map<String, dynamic>>.from(adjustedNutrients),
-        'grams': weightUsed,
-      };
-
-      Navigator.push(
+      // Show the Ingredient Summary screen
+      await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => IngredientSummaryScreen(
@@ -99,10 +93,12 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
             nutrients: List<Map<String, dynamic>>.from(adjustedNutrients),
           ),
         ),
-      ).then((result) {
-        if (result != null) {
-          Navigator.pop(context, ingredientData);
-        }
+      );
+
+      // Instead of popping the ScanIngredientScreen, clear the state so the user can scan another ingredient.
+      setState(() {
+        upcController.clear();
+        foodItem = null;
       });
     }
   }
