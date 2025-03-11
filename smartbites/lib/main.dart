@@ -238,12 +238,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                           borderRadius:
                                               BorderRadius.circular(30.0),
                                         ),
-                                        child: Icon(
-                                          Icons.restaurant_menu,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                          size: 30.0,
+                                        child: InkWell(
+                                          splashColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          onTap: () async {
+                                            _navigateToSavedRecipesScreen();
+                                          },
+                                          child: Icon(
+                                            Icons.restaurant_menu,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            size: 30.0,
+                                          ),
                                         ),
                                       ),
                                       Text(
