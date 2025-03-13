@@ -47,5 +47,9 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires camera access to scan barcodes.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Need BLE permission to connect to the scale</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Need BLE permission to connect to the scale</string>
 </dict>
 </plist>

@@ -4,6 +4,9 @@ PODS:
     - MTBBarcodeScanner
     - SwiftProtobuf
   - Flutter (1.0.0)
+  - flutter_blue_plus_darwin (0.0.2):
+    - Flutter
+    - FlutterMacOS
   - MTBBarcodeScanner (5.0.11)
   - shared_preferences_foundation (0.0.1):
     - Flutter
@@ -13,6 +16,7 @@ PODS:
 DEPENDENCIES:
   - barcode_scan2 (from `.symlinks/plugins/barcode_scan2/ios`)
   - Flutter (from `Flutter`)
+  - flutter_blue_plus_darwin (from `.symlinks/plugins/flutter_blue_plus_darwin/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 SPEC REPOS:
@@ -25,12 +29,15 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/barcode_scan2/ios"
   Flutter:
     :path: Flutter
+  flutter_blue_plus_darwin:
+    :path: ".symlinks/plugins/flutter_blue_plus_darwin/darwin"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
   barcode_scan2: f80517f040989095c9b5067be77649bf6114442c
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_blue_plus_darwin: 09444a26fb6bdef523e55b68fc1c59af5a877ea6
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   SwiftProtobuf: b7aa08087e2ab6d162862d143020091254095f69
