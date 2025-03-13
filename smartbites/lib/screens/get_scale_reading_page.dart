@@ -188,7 +188,8 @@ class _GetScaleReadingPageState extends State<GetScaleReadingPage> {
       if (!mounted) return;  // Add mounted check
       
       setState(() {
-        _statusMessage = 'Ready to weigh ingredients';
+        _statusMessage = 'Please press TARE to begin';  // Better initial prompt
+        _currentStep = 1;
       });
       
       // Debug log all services and characteristics
@@ -465,6 +466,20 @@ class _GetScaleReadingPageState extends State<GetScaleReadingPage> {
             'Step 1: Place ingredient on scale',
             style: TextStyle(fontSize: 18, color: Colors.blue.shade700),
           ),
+          const SizedBox(height: 8),
+          // Add clear instruction about needing to tare first
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.yellow.shade100,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.orange.shade300),
+            ),
+            child: const Text(
+              'Press TARE first to begin reading weights',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
           const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -472,7 +487,8 @@ class _GetScaleReadingPageState extends State<GetScaleReadingPage> {
               ElevatedButton(
                 onPressed: _sendTareCommand,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.shade400,
+                  backgroundColor: Colors.blue,  // Make the tare button more prominent
+                  foregroundColor: Colors.white,
                 ),
                 child: const Text('Tare Scale'),
               ),
@@ -524,25 +540,23 @@ class _GetScaleReadingPageState extends State<GetScaleReadingPage> {
     else {
       return Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: _resetWorkflow,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.shade400,
-                ),
-                child: const Text('Weigh Another Ingredient'),
-              ),
-              const SizedBox(width: 20),
-              ElevatedButton(
-                onPressed: _finishAndReturn,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                ),
-                child: const Text('Use This Amount'),
-              ),
-            ],
+          // Use Column instead of Row for buttons to avoid overflow
+          ElevatedButton(
+            onPressed: _resetWorkflow,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.grey.shade400,
+              minimumSize: const Size(200, 48),  // Set a fixed width
+            ),
+            child: const Text('Weigh Another Ingredient'),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: _finishAndReturn,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              minimumSize: const Size(200, 48),  // Set a fixed width
+            ),
+            child: const Text('Use This Amount'),
           ),
         ],
       );
