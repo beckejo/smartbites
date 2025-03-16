@@ -15,6 +15,7 @@ class ScanIngredientScreen extends StatefulWidget {
 class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
   final TextEditingController upcController = TextEditingController();
   Map<String, dynamic>? foodItem;
+  bool showManualEntry = false;
 
   Future<void> fetchFoodData(String upc) async {
     const apiKey = 'lbjPLUiSxa5yYaxPJX1QgXuNR2pjqNcYfJOQwoeM';
@@ -56,10 +57,18 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
     // Launch the barcode scanner and show the live camera preview
     var scanResult = await BarcodeScanner.scan();
     if (scanResult.rawContent.isNotEmpty) {
+      String upcCode = scanResult.rawContent;
+      
+      // Remove leading zero if it's a 13-digit code starting with 0
+      // (converts EAN-13 format to UPC-A format)
+      if (upcCode.length == 13 && upcCode.startsWith('0')) {
+        upcCode = upcCode.substring(1);
+      }
+      
       setState(() {
-        upcController.text = scanResult.rawContent;
+        upcController.text = upcCode;
       });
-      fetchFoodData(scanResult.rawContent);
+      fetchFoodData(upcCode);
     }
   }
 
@@ -75,7 +84,8 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
       final weightUsed = result as double;
       final adjustedNutrients =
           (foodItem!['foodNutrients'] as List<dynamic>).map((nutrient) {
-        final value = nutrient['value'] as double;
+        // Use toDouble() instead of direct cast
+        final value = (nutrient['value'] as num).toDouble();
         final adjustedValue = (value / 100) * weightUsed;
         return {
           'nutrientName': nutrient['nutrientName'],
@@ -91,6 +101,7 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
           builder: (context) => IngredientSummaryScreen(
             description: foodItem!['description'],
             nutrients: List<Map<String, dynamic>>.from(adjustedNutrients),
+            grams: weightUsed,
           ),
         ),
       );
@@ -108,37 +119,102 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
     }
   }
 
+  void toggleManualEntry() {
+    setState(() {
+      showManualEntry = !showManualEntry;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final buttonWidth = MediaQuery.of(context).size.width * 0.8;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scan Ingredient'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            // Button to start barcode scanning
-            ElevatedButton.icon(
-              icon: const Icon(Icons.camera_alt),
-              label: const Text('Scan Barcode'),
-              onPressed: scanBarcode,
-            ),
-            const SizedBox(height: 20),
-            // Text field for manual UPC entry
-            TextField(
-              controller: upcController,
-              decoration: const InputDecoration(
-                labelText: 'UPC',
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Camera scan button
+              SizedBox(
+                width: buttonWidth,
+                height: 60,
+                child: ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.camera_alt,
+                    size: 28,
+                    color: Colors.white,
+                  ),
+                  label: const Text('Scan Barcode', style: TextStyle(fontSize: 18)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  onPressed: scanBarcode,
+                ),
               ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => fetchFoodData(upcController.text),
-              child: const Text('Fetch Data'),
-            ),
-          ],
+              
+              const SizedBox(height: 30),
+              
+              // Manual entry button
+              SizedBox(
+                width: buttonWidth,
+                height: 60,
+                child: ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.keyboard,
+                    size: 28,
+                    color: Colors.white,
+                  ),
+                  label: const Text('Enter UPC Manually', style: TextStyle(fontSize: 18)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  onPressed: toggleManualEntry,
+                ),
+              ),
+              
+              // Conditional manual entry section
+              if (showManualEntry) ...[
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: buttonWidth,
+                  child: TextField(
+                    controller: upcController,
+                    decoration: const InputDecoration(
+                      labelText: 'UPC Code',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                    ),
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: buttonWidth,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () => fetchFoodData(upcController.text),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Fetch Data', style: TextStyle(fontSize: 16)),
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );
