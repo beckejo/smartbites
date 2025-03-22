@@ -216,14 +216,12 @@ class _NewRecipeScreenState extends State<NewRecipeScreen> {
               SizedBox(
                 width: double.infinity,
                 height: 50,
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: _navigateToScanIngredientScreen,
-                  child: Row(
+                  label: Row(
                     mainAxisSize: MainAxisSize.min, // Prevents row from taking more space than needed
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.add_circle, color: Colors.white, size: 20),
-                      const SizedBox(width: 8),
                       const Flexible(
                         child: Text(
                           'Add Ingredient',
@@ -232,50 +230,40 @@ class _NewRecipeScreenState extends State<NewRecipeScreen> {
                       ),
                     ],
                   ),
+                  icon: const Icon(Icons.add_circle, color: Colors.white, size: 20),
                 ),
               )
             else
               // Two buttons with equal width when ingredients exist
-              Row(
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                spacing: 10.0,
                 children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: _navigateToScanIngredientScreen,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.add_circle, color: Colors.white, size: 20),
-                            const SizedBox(width: 8),
-                            const Flexible(
-                              child: Text(
-                                'Ingredient',
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
+                  OutlinedButton.icon(
+                    onPressed: _navigateToScanIngredientScreen,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 50),
+
+                    ),
+                    label: Flexible(
+                      child: Text(
+                        'Add Ingredient',
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    icon: const Icon(Icons.add_circle, size: 20),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: _finishRecipe,
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.check_circle, color: Colors.white),
-                            SizedBox(width: 10),
-                            Text('Finish Recipe'),
-                          ],
-                        ),
-                      ),
+                  ElevatedButton.icon(
+                    onPressed: _finishRecipe,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 50)
                     ),
+                    label: Flexible(
+                      child: Text(
+                        'Finish Recipe',
+                        overflow: TextOverflow.ellipsis,)
+                    ),
+                    icon: Icon(Icons.check_circle, color: Colors.white),
                   ),
                 ],
               ),
