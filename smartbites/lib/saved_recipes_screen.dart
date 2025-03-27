@@ -61,6 +61,7 @@ class _SavedRecipesScreenState extends State<SavedRecipesScreen> {
       body: _savedRecipes.isEmpty
           ? const Center(child: Text('No recipes saved yet.'))
           : ListView.builder(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               itemCount: _savedRecipes.length,
               itemBuilder: (context, index) {
                 final recipe = _savedRecipes[index];
@@ -75,10 +76,27 @@ class _SavedRecipesScreenState extends State<SavedRecipesScreen> {
                   },
                   background: Container(color: Colors.red),
                   child: ListTile(
-                    title: Text(recipeTitle),
-                    onTap: () =>
-                        _navigateToRecipeDetailsScreen(context, recipe),
-                  ),
+                      title: Text(
+                        recipeTitle,
+                        style: Theme.of(context).textTheme
+                              .titleMedium
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Theme.of(context).colorScheme.secondary,
+                        size: 24,
+                      ),
+                      tileColor:
+                          Theme.of(context).colorScheme.surfaceContainer,
+                      dense: false,
+                      contentPadding:
+                          EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      onTap: () {
+                        _navigateToRecipeDetailsScreen(context, recipe);
+                      }),
                 );
               },
             ),
