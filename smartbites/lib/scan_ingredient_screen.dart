@@ -18,37 +18,47 @@ class _ScanIngredientScreenState extends State<ScanIngredientScreen> {
   bool showManualEntry = false;
 
   Future<void> fetchFoodData(String upc) async {
-    const apiKey = 'lbjPLUiSxa5yYaxPJX1QgXuNR2pjqNcYfJOQwoeM';
-    final searchUrl = 'https://api.nal.usda.gov/fdc/v1/foods/search';
-    final params = {
-      'api_key': apiKey,
-      'query': upc,
-    };
+    if (upc.isNotEmpty && int.tryParse(upc) != null) { 
+      const apiKey = 'lbjPLUiSxa5yYaxPJX1QgXuNR2pjqNcYfJOQwoeM';
+      final searchUrl = 'https://api.nal.usda.gov/fdc/v1/foods/search';
+      final params = {
+        'api_key': apiKey,
+        'query': upc,
+      };
 
-    final uri = Uri.parse(searchUrl).replace(queryParameters: params);
-    final response = await http.get(uri);
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['foods'].isNotEmpty) {
-        setState(() {
-          foodItem = data['foods'][0];
-        });
-        navigateToWeightMeasurementScreen();
+      final uri = Uri.parse(searchUrl).replace(queryParameters: params);
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['foods'].isNotEmpty) {
+          setState(() {
+            foodItem = data['foods'][0];
+          });
+          navigateToWeightMeasurementScreen();
+        } else {
+          setState(() {
+            foodItem = null;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('No food items found for this UPC code.')),
+          );
+        }
       } else {
         setState(() {
           foodItem = null;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('No food items found for this UPC code.')),
+          const SnackBar(content: Text('Error retrieving data from USDA API.')),
         );
       }
-    } else {
+    }
+    else {
       setState(() {
         foodItem = null;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error retrieving data from USDA API.')),
+        const SnackBar(content: Text('Please enter a valid UPC code.')),
       );
     }
   }
