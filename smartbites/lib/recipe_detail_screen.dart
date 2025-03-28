@@ -368,8 +368,8 @@ class _NutritionFactsScreenState extends State<NutritionFactsScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(entry.key),
-                Text('${entry.value.toStringAsFixed(2)}'),
+                Expanded(child: Text(entry.key)),
+                Text(entry.value.toStringAsFixed(2)),
               ],
             ),
           );

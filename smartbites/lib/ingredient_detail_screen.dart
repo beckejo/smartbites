@@ -199,7 +199,7 @@ class _IngredientDetailScreenState extends State<IngredientDetailScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(name),
+                Expanded(child: Text(name)) ,
                 Text('${value.toStringAsFixed(2)} $unit'),
               ],
             ),
